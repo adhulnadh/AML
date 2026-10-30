@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Connect your wallet to access the AML Shield blockchain anti-money-laundering system." />
+  <title>Login | AML Shield</title>
+
+  <!-- Google Fonts: Inter (also pulled in by common.css's own @import; kept
+       here too as a <link> for faster first paint via preconnect) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheets: common.css MUST load before login.css (login.css reads
+       common.css's CSS custom properties) -->
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-card">
+
+      <!-- Logo -->
+      <div class="login-logo">
+        <div class="logo-mark"><i class="fa-solid fa-shield-halved"></i></div>
+        <span class="logo-title">AML Shield</span>
+      </div>
+      <p class="login-card-subtitle">Blockchain-Based Anti-Money Laundering</p>
+
+      <!-- ===================================================================
+           SECTION: Connect
+           Visible by default. Hidden once a wallet address is known (see
+           showUserInfo() in page1-login.js).
+      ==================================================================== -->
+      <div id="connectSection">
+        <button id="connectWalletBtn" class="btn-connect-wallet">
+          <i class="fa-brands fa-ethereum wallet-icon"></i>
+          <span>Connect MetaMask</span>
+        </button>
+
+        <div id="metamaskWarning" class="login-error hidden">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>
+            MetaMask not detected.
+            <a id="installMetamaskLink" href="https://metamask.io/download/" target="_blank" rel="noopener noreferrer">
+              Install it here
+            </a>.
+          </span>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           SECTION: Wallet info
+           Hidden until Wallet.connect() (or a silent eth_accounts check on
+           load) succeeds. Populated by showUserInfo() in page1-login.js.
+      ==================================================================== -->
+      <div id="walletInfoSection">
+        <div id="walletInfoCard" class="wallet-info-card hidden">
+          <div class="wallet-avatar"><i class="fa-solid fa-wallet"></i></div>
+          <div class="wallet-details">
+            <div id="walletAddressDisplay" class="wallet-address">0x0000...0000</div>
+            <div class="wallet-status">
+              <span class="status-dot"></span>
+              <span>Connected</span>
+              <span class="badge badge-primary" id="networkBadge" style="margin-left: 6px;">Sepolia</span>
+            </div>
+          </div>
+          <button id="walletDisconnectBtn" class="wallet-disconnect">Disconnect</button>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           SECTION: Already-registered user
+           NOTE: page1-login.js's checkRegistration() currently redirects a
+           registered user immediately (per the spec's "auto-redirect on
+           load" requirement) rather than pausing here with a Continue
+           button, so in practice this section is not shown today. It's
+           kept in the markup -- and wired to #continueBtn, which the JS
+           does reference -- in case you'd rather show a confirmation step
+           before navigating away; ask and it's a one-line change in
+           page1-login.js's checkRegistration().
+      ==================================================================== -->
+      <div id="userInfoSection">
+        <p class="login-card-subtitle" id="welcomeMessage" style="margin-top: var(--space-2);"></p>
+        <button id="continueBtn" class="btn-continue hidden">
+          <i class="fa-solid fa-arrow-right"></i>
+          <span>Continue</span>
+        </button>
+      </div>
+
+      <!-- ===================================================================
+           SECTION: Registration
+           Hidden until checkRegistration() determines the connected address
+           is NOT yet registered in UserRegistry.
+      ==================================================================== -->
+      <div id="registerSection">
+        <form id="registrationForm" class="registration-form hidden">
+          <div class="form-group">
+            <label class="form-label" for="nameInput">Full name</label>
+            <input id="nameInput" class="form-input" type="text" placeholder="Jane Doe" required />
+          </div>
+
+          <div class="role-selector" id="roleSelector">
+            <div class="role-selector-label">Select your role</div>
+
+            <label class="role-option" data-role="1">
+              <input type="radio" name="role" value="1" />
+              <span class="role-icon">🆘</span>
+              <span class="role-text">
+                <span class="role-name">Requester</span>
+                <span class="role-desc">Request funds from the community</span>
+              </span>
+              <span class="role-check"></span>
+            </label>
+
+            <label class="role-option" data-role="2">
+              <input type="radio" name="role" value="2" />
+              <span class="role-icon">💎</span>
+              <span class="role-text">
+                <span class="role-name">Funder</span>
+                <span class="role-desc">Review and pay fund requests</span>
+              </span>
+              <span class="role-check"></span>
+            </label>
+
+            <label class="role-option" data-role="3">
+              <input type="radio" name="role" value="3" />
+              <span class="role-icon">🛡️</span>
+              <span class="role-text">
+                <span class="role-name">Admin</span>
+                <span class="role-desc">Monitor the system for compliance</span>
+              </span>
+              <span class="role-check"></span>
+            </label>
+          </div>
+
+          <!-- Only required/relevant when role === FUNDER; toggled by
+               handleRoleOptionClick() in page1-login.js -->
+          <div class="form-group hidden" id="incomeGroup">
+            <label class="form-label" for="incomeInput">Annual income (ETH)</label>
+            <input id="incomeInput" class="form-input" type="number" min="0" step="0.01" placeholder="0.00" />
+          </div>
+
+          <button type="submit" id="registerBtn" class="btn-continue">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Register</span>
+          </button>
+        </form>
+      </div>
+
+      <p class="login-footer-note">
+        By connecting, you agree this is a demonstration system and no real funds should be at risk.
+      </p>
+    </div>
+  </div>
+
+  <!-- Toast notifications container is created dynamically by
+       Wallet.showToast() in metamask.js (see its .toast-container logic),
+       but an empty mount point is left here for clarity / early paint. -->
+  <div id="toast" class="toast-container"></div>
+
+  <!-- Loading overlay is created dynamically by Wallet.showLoading() /
+       hideLoading() in metamask.js -- no static markup needed here. -->
+  <div id="loading"></div>
+
+  <!-- ===================================================================
+       Scripts -- order matters:
+       1. ethers.js v5 (UMD build, exposes window.ethers)
+       2. config.js (defines window.CONFIG)
+       3. metamask.js (defines window.Wallet, depends on both above)
+       4. page1-login.js (this page's own logic, depends on all of the above)
+  ==================================================================== -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="../js/deployed.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/metamask.js"></script>
+  <script src="../js/page1-login.js"></script>
+</body>
+</html>

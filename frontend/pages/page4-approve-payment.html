@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Review, approve, or reject a fund request on AML Shield." />
+  <title>Review Request | AML Shield</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/approve.css" />
+</head>
+<body class="approve-page">
+
+  <nav class="navbar">
+    <a href="page3-rich-login.html" class="nav-brand">
+      <span class="brand-mark"><i class="fa-solid fa-shield-halved"></i></span>
+      AML Shield
+    </a>
+    <div class="nav-links">
+      <a href="page3-rich-login.html">Dashboard</a>
+      <a href="#" id="logoutLink">Logout</a>
+    </div>
+    <div class="nav-wallet" id="navWallet">
+      <span class="wallet-dot"></span>
+      <span id="navWalletAddress">Not connected</span>
+    </div>
+  </nav>
+
+  <!-- Centered, single-column main content, per the spec. -->
+  <div class="approve-container">
+
+    <div class="approve-page-header">
+      <a href="page3-rich-login.html" class="btn-ghost btn-sm" style="margin-bottom: var(--space-3); display: inline-flex;">
+        <i class="fa-solid fa-arrow-left"></i>&nbsp; Back to dashboard
+      </a>
+      <h1>Review Request</h1>
+      <p id="funderBalanceDisplay"></p>
+    </div>
+
+    <!-- Shown by loadRequestDetails()/loadRequesterInfo()/runAMLCheck() in
+         page4-approve.js once the stored requestId resolves successfully. -->
+    <div class="request-detail-card" id="requestDetailCard">
+
+      <div class="request-detail-header">
+        <div class="request-detail-requester">
+          <div class="requester-avatar"><i class="fa-solid fa-user"></i></div>
+          <div>
+            <div class="requester-name" id="requesterName">—</div>
+            <div class="requester-address" id="requesterAddress">—</div>
+          </div>
+        </div>
+        <span class="badge" id="requesterReputationBadge">—</span>
+      </div>
+
+      <div class="request-detail-body">
+        <div class="request-detail-amount">
+          <span class="amount-value" id="requestAmount">0</span>
+          <span class="amount-unit">ETH</span>
+        </div>
+
+        <div class="detail-field">
+          <div class="detail-field-label">Urgency</div>
+          <div class="detail-field-value" id="requestUrgency">—</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Submitted</div>
+          <div class="detail-field-value" id="requestDate">—</div>
+        </div>
+
+        <div class="detail-field detail-purpose">
+          <div class="detail-field-label">Purpose</div>
+          <div class="detail-field-value" id="requestPurpose">—</div>
+        </div>
+      </div>
+
+      <!-- Populated by runAMLCheck()/renderAmlCheckBox() -->
+      <div class="aml-check-box" id="amlCheckBox"></div>
+
+      <!-- Populated by showBalanceComparison() -->
+      <div class="balance-comparison" id="balanceComparison"></div>
+
+      <!-- Populated by showTxPreview() -->
+      <div class="tx-preview" id="txPreview"></div>
+
+      <div class="action-buttons">
+        <button id="rejectBtn" class="btn-reject">
+          <i class="fa-solid fa-xmark btn-icon"></i>
+          Reject
+        </button>
+        <button id="approveBtn" class="btn-approve">
+          <i class="fa-solid fa-check btn-icon"></i>
+          Approve &amp; Pay
+        </button>
+      </div>
+    </div>
+
+    <!-- Shown instead of requestDetailCard when no request is selected, the
+         request doesn't exist, or it's no longer PENDING -- see
+         showFatalError() in page4-approve.js. -->
+    <div id="requestErrorBanner" class="alert-banner alert-danger hidden"></div>
+  </div>
+
+  <div id="toast" class="toast-container"></div>
+  <div id="loading"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="../js/deployed.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/metamask.js"></script>
+  <script src="../js/page4-approve.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = window.Wallet && window.Wallet.getStoredUser();
+      const addrEl = document.getElementById("navWalletAddress");
+      if (user && addrEl) {
+        addrEl.textContent = window.Wallet.formatAddress(user.address);
+      }
+
+      const logoutLink = document.getElementById("logoutLink");
+      if (logoutLink) {
+        logoutLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.Wallet.disconnect();
+          window.location.href = window.CONFIG.ROUTES.login;
+        });
+      }
+    });
+  </script>
+</body>
+</html>

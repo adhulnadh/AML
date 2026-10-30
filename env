@@ -1,0 +1,123 @@
+# ============================================================
+# AML DETECTION SYSTEM — ENVIRONMENT VARIABLES
+# ============================================================
+# ⚠️  NEVER commit this file to GitHub, GitLab, or any VCS.
+# ⚠️  Add ".env" to your .gitignore BEFORE you fill in real values.
+# ⚠️  Anyone who gets PRIVATE_KEY can drain that wallet instantly —
+#     there is no "undo" on a blockchain. Treat it like a password
+#     you'd never paste into a chat, email, or AI assistant.
+# ⚠️  If this file (or its contents) is ever exposed — pushed to a
+#     public repo, pasted somewhere, leaked in a screenshot — treat
+#     the private key as compromised: move funds out and generate a
+#     new wallet. Do not just "undo" the commit; the key is burned.
+# ============================================================
+
+
+# ---------------------------------------------------------------
+# DEPLOYER WALLET
+# ---------------------------------------------------------------
+# The private key of the wallet Hardhat will use to deploy and send
+# transactions. WITHOUT the "0x" prefix.
+#
+# How to get it (MetaMask): Account menu → Account Details →
+#   Show private key. MetaMask will warn you — that warning is real.
+#
+# STRONGLY RECOMMENDED: use a dedicated "burner" deployer wallet that
+# holds only small amounts of testnet/mainnet ETH, never your main
+# wallet's key. For testnets this costs nothing and limits the blast
+# radius if this file ever leaks.
+PRIVATE_KEY=your_private_key_here
+
+
+# ---------------------------------------------------------------
+# NETWORK RPC URLS
+# ---------------------------------------------------------------
+# Free RPC endpoints: Infura (https://infura.io) or Alchemy
+# (https://alchemy.com). Create a project/app on either and copy the
+# HTTPS endpoint they give you for each network below.
+
+# Sepolia Testnet (recommended for development/testing — this is the
+# network referenced elsewhere in this project, e.g. config.js)
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID
+
+# Goerli Testnet (deprecated by most providers/faucets in favor of
+# Sepolia and Holesky — included for completeness only; don't start a
+# new project on it)
+GOERLI_RPC_URL=https://goerli.infura.io/v3/YOUR_INFURA_PROJECT_ID
+
+# Ethereum Mainnet — REAL FUNDS, REAL CONSEQUENCES.
+# Do not point DEFAULT_NETWORK at this until the contracts have been
+# tested thoroughly on testnet and, ideally, audited. A bug deployed
+# here can't be patched — only replaced via a brand-new deployment.
+MAINNET_RPC_URL=https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID
+
+# Local Hardhat node (started via `npx hardhat node`) — no real funds,
+# safe to experiment against freely.
+LOCALHOST_RPC_URL=http://127.0.0.1:8545
+
+
+# ---------------------------------------------------------------
+# BLOCK EXPLORER API KEYS
+# ---------------------------------------------------------------
+# Used by the hardhat-etherscan plugin to auto-verify contract source
+# code after deployment (`npx hardhat verify`). Get a free key at
+# https://etherscan.io/myapikey (one key now covers Etherscan's
+# multi-chain v2 API, including Sepolia).
+ETHERSCAN_API_KEY=your_etherscan_api_key_here
+
+
+# ---------------------------------------------------------------
+# COINMARKETCAP (optional — for gas-cost reporting in USD)
+# ---------------------------------------------------------------
+# Only needed if hardhat-gas-reporter is configured with
+# `coinmarketcap: process.env.COINMARKETCAP_API_KEY` to show gas costs
+# in USD alongside ETH/gas units. Safe to leave blank otherwise.
+COINMARKETCAP_API_KEY=your_coinmarketcap_api_key
+
+
+# ---------------------------------------------------------------
+# NETWORK SELECTION
+# ---------------------------------------------------------------
+# Which network scripts/deploy.js and friends target by default when
+# no --network flag is passed. Options: localhost, sepolia, goerli,
+# mainnet. hardhat.config.js must read this value for it to have any
+# effect — see the note at the bottom of this file.
+DEFAULT_NETWORK=sepolia
+
+
+# ---------------------------------------------------------------
+# CONTRACT ADDRESSES (auto-filled after deployment)
+# ---------------------------------------------------------------
+# scripts/deploy.js already writes deployed addresses to
+# deployments.json and frontend/js/config.js directly — these four
+# variables are an OPTIONAL extra copy for anything that reads
+# addresses from the environment instead (e.g. a verification script
+# or a backend service). Leave blank until after your first deploy;
+# deploy.js does not currently populate these itself (flagging so the
+# two don't silently drift out of sync — see note at bottom of file).
+USER_REGISTRY_ADDRESS=
+FUND_REQUEST_ADDRESS=
+PAYMENT_PROCESSOR_ADDRESS=
+AML_SYSTEM_ADDRESS=
+
+
+# ---------------------------------------------------------------
+# AML CONFIGURATION
+# ---------------------------------------------------------------
+# Mirrors of the on-chain thresholds, for scripts that want to read a
+# default without a live contract call (e.g. seed-data.js). The
+# CONTRACTS are always the real source of truth — PaymentProcessor's
+# amlThreshold and AMLSystem's suspiciousThreshold can each be changed
+# on-chain via setThreshold() independently of these values. Keep
+# these in sync manually if you change the on-chain thresholds.
+AML_THRESHOLD_ETH=5
+MAX_TRANSACTION_ETH=100
+
+
+# ---------------------------------------------------------------
+# FRONTEND CONFIG
+# ---------------------------------------------------------------
+# Local dev server URL for the frontend (if served via a bundler/dev
+# server rather than opened as static files). Used for things like
+# CORS allowlists or QR-code/share links back to the app.
+FRONTEND_URL=http://localhost:3000

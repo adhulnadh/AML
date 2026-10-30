@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Review and fund pending requests on AML Shield." />
+  <title>Funder Dashboard | AML Shield</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- common.css first, then the two page stylesheets this page borrows
+       components from (see page3-rich-login.js's header note: no
+       dedicated rich-login.css exists yet). -->
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/request.css" />
+  <link rel="stylesheet" href="../css/approve.css" />
+</head>
+<body class="request-page">
+
+  <nav class="navbar">
+    <a href="page3-rich-login.html" class="nav-brand">
+      <span class="brand-mark"><i class="fa-solid fa-shield-halved"></i></span>
+      AML Shield
+    </a>
+    <div class="nav-links">
+      <a href="page3-rich-login.html" class="active">Dashboard</a>
+      <a href="#" id="logoutLink">Logout</a>
+    </div>
+    <div class="nav-wallet" id="navWallet">
+      <span class="wallet-dot"></span>
+      <span id="navWalletAddress">Not connected</span>
+    </div>
+  </nav>
+
+  <!-- request.css's .request-container provides the page's max-width
+       wrapper/padding; overridden to a single column here since this page
+       has no left-hand form like page2. -->
+  <div class="request-container" style="grid-template-columns: 1fr;">
+
+    <div class="request-page-header">
+      <h1 id="funderNameDisplay">Funder Dashboard</h1>
+      <p id="funderBalanceDisplay"></p>
+    </div>
+
+    <!-- Stats row: approve.css's .stats-row / .stat-box, IDs matched
+         exactly to page3-rich-login.js's el.stat* references. -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-box stat-pending">
+        <div class="stat-box-value" id="statPending">0</div>
+        <div class="stat-box-label">Pending</div>
+      </div>
+      <div class="stat-box stat-approved">
+        <div class="stat-box-value" id="statApproved">0</div>
+        <div class="stat-box-label">Approved</div>
+      </div>
+      <div class="stat-box stat-rejected">
+        <div class="stat-box-value" id="statRejected">0</div>
+        <div class="stat-box-label">Rejected</div>
+      </div>
+      <div class="stat-box stat-total-paid">
+        <div class="stat-box-value" id="statTotalPaid">0 ETH</div>
+        <div class="stat-box-label">Total Paid</div>
+      </div>
+    </div>
+
+    <!-- =================================================================
+         FILTER BAR
+         RECONCILIATION NOTE: the spec asked for filter chips "All / Urgent
+         / Recent", but page3-rich-login.js's handleUrgencyFilterClick()
+         only understands urgency values (treats a chip's data-urgency as
+         0/1/2 or "all") -- there's no "Recent" concept at the filter-chip
+         level, because recency is already covered by the Sort dropdown
+         right next to it ("Newest first" is the default sort). Adding a
+         third "Recent" chip bound to data-urgency would have no matching
+         urgency value and silently do nothing when clicked. So this filter
+         bar ships two chips -- All / Urgent (High urgency) -- and relies on
+         the Sort dropdown for "most recent first", rather than shipping a
+         chip that looks clickable but is actually dead. Happy to add a
+         real "Recent" filter mode to the JS if you want a third chip that
+         actually does something distinct from the default sort.
+    ================================================================== -->
+    <div class="my-requests-header">
+      <h2>Pending Requests</h2>
+      <div class="my-requests-filter" id="urgencyFilter">
+        <button data-urgency="all" class="active">All</button>
+        <button data-urgency="2">Urgent</button>
+      </div>
+      <select id="sortSelect" class="form-select" style="max-width: 200px;">
+        <option value="date-desc">Newest first</option>
+        <option value="date-asc">Oldest first</option>
+        <option value="amount-desc">Amount: high to low</option>
+        <option value="amount-asc">Amount: low to high</option>
+        <option value="urgency-desc">Urgency: high to low</option>
+      </select>
+      <button id="refreshBtn" class="btn btn-outline btn-sm">
+        <i class="fa-solid fa-rotate"></i>
+        Refresh
+      </button>
+    </div>
+
+    <div class="requests-list" id="pendingRequestsList"></div>
+
+    <div class="empty-state hidden" id="emptyState">
+      <div class="empty-illustration"><i class="fa-solid fa-inbox"></i></div>
+      <h3>No pending requests</h3>
+      <p>New requests from requesters will appear here in real time.</p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast-container"></div>
+  <div id="loading"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="../js/deployed.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/metamask.js"></script>
+  <script src="../js/page3-rich-login.js"></script>
+
+  <script>
+    // Same minimal navbar wiring used on page2-user-request.html -- see
+    // that file's note about extracting this into a shared navbar.js if
+    // it keeps getting copy-pasted across pages.
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = window.Wallet && window.Wallet.getStoredUser();
+      const addrEl = document.getElementById("navWalletAddress");
+      if (user && addrEl) {
+        addrEl.textContent = window.Wallet.formatAddress(user.address);
+      }
+
+      const logoutLink = document.getElementById("logoutLink");
+      if (logoutLink) {
+        logoutLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.Wallet.disconnect();
+          window.location.href = window.CONFIG.ROUTES.login;
+        });
+      }
+    });
+  </script>
+</body>
+</html>

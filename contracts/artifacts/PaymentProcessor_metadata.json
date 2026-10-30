@@ -1,0 +1,568 @@
+{
+	"compiler": {
+		"version": "0.8.34+commit.80d5c536"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userRegistry",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_fundRequest",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "requestId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "ApprovalRequiresAdmin",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "paymentId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "requestId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "funder",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "requester",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "PaymentCompleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "paymentId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "PaymentFlagged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "requestId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "funder",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "reason",
+						"type": "string"
+					}
+				],
+				"name": "RequestRejectedByFunder",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "ThresholdUpdated",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "amlThreshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_requestId",
+						"type": "uint256"
+					}
+				],
+				"name": "approveAndPay",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fundRequest",
+				"outputs": [
+					{
+						"internalType": "contract FundRequest",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_paymentId",
+						"type": "uint256"
+					}
+				],
+				"name": "getPayment",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "paymentId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "requestId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "funder",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "requester",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "txHash",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bool",
+								"name": "isSuspicious",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct PaymentProcessor.Payment",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getPaymentCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getPaymentsByUser",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getThreshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paymentCounter",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "payments",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "paymentId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "requestId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "funder",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "requester",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "txHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bool",
+						"name": "isSuspicious",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_requestId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_reason",
+						"type": "string"
+					}
+				],
+				"name": "rejectRequest",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_newThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "setThreshold",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "userPayments",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "userRegistry",
+				"outputs": [
+					{
+						"internalType": "contract UserRegistry",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Handles FUNDER approval/rejection of fund requests and the actual      ETH transfer from FUNDER to REQUESTER. Applies a simple on-chain      AML amount threshold to flag large payments for review. Setup: after deploying UserRegistry, FundRequest, and this contract, the admin must call:   - UserRegistry.setPaymentProcessorContract(address(this))   - FundRequest.setPaymentProcessor(address(this)) so this contract is authorized to update registry stats and request state. NOTE: The AML threshold here is a simple static amount check for demonstration purposes. A production AML system would use off-chain risk scoring, behavioral pattern analysis, and sanctions-list checks rather than a single fixed ETH amount, and would not gate compliance on the \"wealth\" of either party.",
+			"kind": "dev",
+			"methods": {
+				"approveAndPay(uint256)": {
+					"params": {
+						"_requestId": "ID of the request to approve and pay."
+					}
+				},
+				"constructor": {
+					"details": "Links this contract to the deployed UserRegistry and FundRequest      instances.",
+					"params": {
+						"_fundRequest": "Address of the deployed FundRequest contract.",
+						"_userRegistry": "Address of the deployed UserRegistry contract."
+					}
+				},
+				"getPayment(uint256)": {
+					"params": {
+						"_paymentId": "ID of the payment to look up."
+					},
+					"returns": {
+						"_0": "The Payment struct for _paymentId."
+					}
+				},
+				"getPaymentCount()": {
+					"returns": {
+						"_0": "Total payment count."
+					}
+				},
+				"getPaymentsByUser(address)": {
+					"params": {
+						"_user": "Address to look up."
+					},
+					"returns": {
+						"_0": "Array of payment IDs involving _user."
+					}
+				},
+				"getThreshold()": {
+					"returns": {
+						"_0": "Current threshold amount, in wei."
+					}
+				},
+				"rejectRequest(uint256,string)": {
+					"params": {
+						"_reason": "Human-readable reason for the rejection.",
+						"_requestId": "ID of the request to reject."
+					}
+				},
+				"setThreshold(uint256)": {
+					"params": {
+						"_newThreshold": "New threshold amount, in wei."
+					}
+				}
+			},
+			"title": "PaymentProcessor",
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"RequestRejectedByFunder(uint256,address,string)": {
+					"notice": "Emitted when a FUNDER rejects a pending request."
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"amlThreshold()": {
+					"notice": "Payments strictly above this amount (in wei) are flagged as         suspicious for compliance review. Defaults to 5 ether."
+				},
+				"approveAndPay(uint256)": {
+					"notice": "Approves a pending fund request and immediately transfers the         attached ETH to the requester. Caller must be a registered,         non-blacklisted FUNDER and must send exactly the requested         amount as msg.value."
+				},
+				"fundRequest()": {
+					"notice": "Reference to the deployed FundRequest contract."
+				},
+				"getPayment(uint256)": {
+					"notice": "Returns the full record for a given payment."
+				},
+				"getPaymentCount()": {
+					"notice": "Returns the total number of payments ever processed."
+				},
+				"getPaymentsByUser(address)": {
+					"notice": "Returns all payment IDs a given user was involved in, either         as funder or requester."
+				},
+				"getThreshold()": {
+					"notice": "Returns the current AML flagging threshold."
+				},
+				"paymentCounter()": {
+					"notice": "Running counter used to assign unique payment IDs (1-indexed)."
+				},
+				"payments(uint256)": {
+					"notice": "Maps payment ID to its full record."
+				},
+				"rejectRequest(uint256,string)": {
+					"notice": "Rejects a pending fund request. Caller must be a registered,         non-blacklisted FUNDER. No funds are transferred."
+				},
+				"setThreshold(uint256)": {
+					"notice": "Updates the AML flagging threshold. Admin only."
+				},
+				"userPayments(address,uint256)": {
+					"notice": "Maps a user address (funder or requester) to the payment IDs         they were involved in."
+				},
+				"userRegistry()": {
+					"notice": "Reference to the deployed UserRegistry contract."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"PaymentProcessor.sol": "PaymentProcessor"
+		},
+		"evmVersion": "osaka",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"FundRequest.sol": {
+			"keccak256": "0x9d6a2b8f8cb0d3a4e9faf1094d69ae6436243bf0a7960cab90c1c3e74165ac1f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1cc77eb8201b1aa52fabf9ac1fde9d200518375ff4e32398d92e9405c90453ed",
+				"dweb:/ipfs/QmQpscpxRKPe4cYQeHd8ZWMFQHAa1h75KBeMa7LMzJ8F8R"
+			]
+		},
+		"PaymentProcessor.sol": {
+			"keccak256": "0x13295a41f646a1ad3453fff0bb929db483260c480f895d8c511ee204f8dbdff8",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4fce5b79d042f4fb81980ae6971b24556268e2c3cf5f605ffcda2db4e0f43d4e",
+				"dweb:/ipfs/QmdgTKhAui9cUzcPKesQr9nHDy7FvoTNMJcHQmXDV3f7jS"
+			]
+		},
+		"UserRegistry.sol": {
+			"keccak256": "0xfd0ef727c2e34adc5753b1ee20e047a37dc0311f623bdadbd78511871bad61c6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a4a8522d027696fa234dac0c83633505ba48c6879dcadbc6a0aeeef50fe50d9c",
+				"dweb:/ipfs/QmQHfarE7qygvr5jA4PLoRKKYijKYe5RcUrxsyZzgfNGc2"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Admin monitoring dashboard for AML Shield." />
+  <title>Admin Monitor | AML Shield</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/monitor.css" />
+</head>
+<body id="monitorPage" class="monitor-page">
+
+  <nav class="navbar">
+    <a href="page5-monitor.html" class="nav-brand">
+      <span class="brand-mark"><i class="fa-solid fa-shield-halved"></i></span>
+      AML Shield
+    </a>
+    <div class="nav-links">
+      <a href="page5-monitor.html" class="active">Monitor</a>
+      <a href="#" id="logoutLink">Logout</a>
+    </div>
+    <div class="nav-wallet" id="navWallet">
+      <span class="wallet-dot"></span>
+      <span id="navWalletAddress">Not connected</span>
+    </div>
+  </nav>
+
+  <div class="monitor-container">
+
+    <!-- Suspicious-activity alerts are injected here by page5-monitor.js -->
+    <div id="alertBannerContainer"></div>
+
+    <div class="monitor-page-header">
+      <div>
+        <h1>Admin Monitor</h1>
+        <p>Real-time view of every request, payment, and flagged transaction.</p>
+      </div>
+      <div class="monitor-header-actions">
+        <button id="themeToggleBtn" class="theme-toggle" type="button">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          <span>Dark mode</span>
+        </button>
+        <button id="refreshBtn" class="btn btn-outline btn-sm" type="button">
+          <i class="fa-solid fa-rotate"></i> Refresh
+        </button>
+        <button id="exportBtn" class="export-btn" type="button">
+          <i class="fa-solid fa-download export-icon"></i> Export CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="stats-grid">
+      <div class="stat-card stat-users">
+        <div class="stat-card-top"><div class="stat-card-icon"><i class="fa-solid fa-users"></i></div></div>
+        <div class="stat-value" id="statTotalUsers">0</div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card stat-requests">
+        <div class="stat-card-top"><div class="stat-card-icon"><i class="fa-solid fa-inbox"></i></div></div>
+        <div class="stat-value" id="statTotalRequests">0</div>
+        <div class="stat-label">Total Requests</div>
+      </div>
+      <div class="stat-card stat-payments">
+        <div class="stat-card-top"><div class="stat-card-icon"><i class="fa-solid fa-money-bill-transfer"></i></div></div>
+        <div class="stat-value" id="statTotalPayments">0</div>
+        <div class="stat-label">Total Payments</div>
+      </div>
+      <div class="stat-card stat-suspicious">
+        <div class="stat-card-top"><div class="stat-card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div></div>
+        <div class="stat-value" id="statSuspicious">0</div>
+        <div class="stat-label">Suspicious</div>
+      </div>
+    </div>
+
+    <!-- Live feed (left) + threshold & blacklist (right) -->
+    <div class="dashboard-grid">
+
+      <div class="live-feed">
+        <div class="live-feed-header">
+          <h2>Live Transaction Feed</h2>
+          <div class="live-indicator"><span class="live-dot"></span> LIVE</div>
+        </div>
+        <div class="live-feed-list" id="liveFeedList"></div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: var(--space-6);">
+
+        <div class="threshold-card">
+          <h2>AML Threshold</h2>
+          <p class="threshold-desc">Transactions above this amount are flagged as suspicious.</p>
+          <div class="threshold-current">
+            <span class="threshold-value" id="thresholdCurrentValue">5 ETH</span>
+          </div>
+          <form id="thresholdForm" class="threshold-form">
+            <input id="thresholdInput" class="form-input" type="number" min="0" step="0.01" placeholder="New threshold (ETH)" required />
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
+
+        <div class="blacklist-panel">
+          <div class="blacklist-panel-header">
+            <h2>Blacklist</h2>
+            <span class="blacklist-count" id="blacklistCount">0</span>
+          </div>
+          <form id="blacklistAddForm" class="blacklist-add-form" style="flex-wrap: wrap;">
+            <input id="blacklistAddressInput" class="form-input" type="text" placeholder="0x… address" required />
+            <input id="blacklistReasonInput" class="form-input" type="text" placeholder="Reason" required />
+            <button type="submit" class="btn btn-danger">Blacklist</button>
+          </form>
+          <div class="blacklist-list" id="blacklistList"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-section">
+      <div class="chart-container">
+        <div class="chart-container-header"><h3>Transactions Over Time</h3></div>
+        <div class="chart-canvas-wrapper"><canvas id="chartTxOverTime"></canvas></div>
+      </div>
+      <div class="chart-container">
+        <div class="chart-container-header"><h3>Normal vs Suspicious</h3></div>
+        <div class="chart-canvas-wrapper"><canvas id="chartNormalSuspicious"></canvas></div>
+      </div>
+      <div class="chart-container" style="grid-column: 1 / -1;">
+        <div class="chart-container-header"><h3>Top Requesters</h3></div>
+        <div class="chart-canvas-wrapper"><canvas id="chartTopRequesters"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Filters + table -->
+    <div class="filter-bar">
+      <input id="filterSearch" class="form-input filter-search" type="text" placeholder="Search by address…" />
+      <div id="filterStatusChips" style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+        <button type="button" class="filter-chip active" data-status="all">All</button>
+        <button type="button" class="filter-chip" data-status="normal">Normal</button>
+        <button type="button" class="filter-chip" data-status="suspicious">Suspicious</button>
+        <button type="button" class="filter-chip" data-status="blacklisted">Blacklisted</button>
+      </div>
+      <input id="filterDateFrom" class="form-input filter-select" type="date" title="From date" />
+      <input id="filterDateTo" class="form-input filter-select" type="date" title="To date" />
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="txTableBody"></tbody>
+      </table>
+    </div>
+    <div id="txPagination" style="display: flex; align-items: center; justify-content: center; gap: var(--space-3);"></div>
+  </div>
+
+  <div id="toast" class="toast-container"></div>
+  <div id="loading"></div>
+
+  <!-- Script order matters: ethers → Chart.js → deployed.js → config.js → metamask.js → page script -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="../js/deployed.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/metamask.js"></script>
+  <script src="../js/page5-monitor.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = window.Wallet && window.Wallet.getStoredUser();
+      const addrEl = document.getElementById("navWalletAddress");
+      if (user && addrEl) {
+        addrEl.textContent = window.Wallet.formatAddress(user.address);
+      }
+
+      const logoutLink = document.getElementById("logoutLink");
+      if (logoutLink) {
+        logoutLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.Wallet.disconnect();
+          window.location.href = window.CONFIG.ROUTES.login;
+        });
+      }
+    });
+  </script>
+</body>
+</html>

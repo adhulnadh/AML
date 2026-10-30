@@ -1,0 +1,911 @@
+{
+	"compiler": {
+		"version": "0.8.34+commit.80d5c536"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userRegistry",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_fundRequest",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_paymentProcessor",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "reason",
+						"type": "string"
+					}
+				],
+				"name": "AddressBlacklisted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "AddressWhitelisted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousAdmin",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newAdmin",
+						"type": "address"
+					}
+				],
+				"name": "AdminTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "txId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "SuspiciousActivityDetected",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "ThresholdUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "suspicious",
+						"type": "bool"
+					}
+				],
+				"name": "TransactionLogged",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "blacklist",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_reason",
+						"type": "string"
+					}
+				],
+				"name": "blacklistAddress",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "blacklistReasons",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "blacklistedAddresses",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fundRequest",
+				"outputs": [
+					{
+						"internalType": "contract FundRequest",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getAllTransactionLogs",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "from",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "to",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "txType",
+								"type": "string"
+							},
+							{
+								"internalType": "bool",
+								"name": "isSuspicious",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "flagReason",
+								"type": "string"
+							}
+						],
+						"internalType": "struct AMLSystem.TransactionLog[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getBlacklistCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getBlacklistReason",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getBlacklistedAddresses",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getSuspiciousTransactions",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "from",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "to",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "txType",
+								"type": "string"
+							},
+							{
+								"internalType": "bool",
+								"name": "isSuspicious",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "flagReason",
+								"type": "string"
+							}
+						],
+						"internalType": "struct AMLSystem.TransactionLog[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getSystemStats",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "totalUsers",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalRequests",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalPayments",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalSuspicious",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalBlacklisted",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getThreshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "getTransactionLog",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "from",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "to",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "txType",
+								"type": "string"
+							},
+							{
+								"internalType": "bool",
+								"name": "isSuspicious",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "flagReason",
+								"type": "string"
+							}
+						],
+						"internalType": "struct AMLSystem.TransactionLog",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "isBlacklisted",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paymentProcessor",
+				"outputs": [
+					{
+						"internalType": "contract PaymentProcessor",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_newThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "setThreshold",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "suspiciousThreshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "transactionLogCounter",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "transactionLogs",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "txType",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isSuspicious",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "flagReason",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_newAdmin",
+						"type": "address"
+					}
+				],
+				"name": "transferAdmin",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "userRegistry",
+				"outputs": [
+					{
+						"internalType": "contract UserRegistry",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "whitelistAddress",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Central admin contract for the AML demo system. Owns the global      suspicious-amount threshold, maintains an independent blacklist      registry, keeps a running transaction log, and exposes aggregate      system statistics pulled from UserRegistry, FundRequest, and      PaymentProcessor. NOTE: This contract maintains its OWN blacklist (`blacklist` / `blacklistReasons`), separate from UserRegistry's per-user `isBlacklisted` flag. The two are independent by design of the given spec — see the integration note at the bottom of this file for the implications of that split.",
+			"kind": "dev",
+			"methods": {
+				"blacklistAddress(address,string)": {
+					"params": {
+						"_reason": "Human-readable reason for the blacklist action.",
+						"_user": "Address to blacklist."
+					}
+				},
+				"constructor": {
+					"details": "Sets the deploying address as admin and links the three      companion contracts that make up the rest of the system.",
+					"params": {
+						"_fundRequest": "Address of the deployed FundRequest contract.",
+						"_paymentProcessor": "Address of the deployed PaymentProcessor contract.",
+						"_userRegistry": "Address of the deployed UserRegistry contract."
+					}
+				},
+				"getAllTransactionLogs()": {
+					"details": "Unbounded loop over transactionLogCounter — fine for a demo /      moderate log size, but on a live system with heavy transaction      volume this should be paginated off-chain instead.",
+					"returns": {
+						"_0": "Array of all TransactionLog entries, oldest first."
+					}
+				},
+				"getBlacklistCount()": {
+					"returns": {
+						"_0": "Count of entries in blacklistedAddresses."
+					}
+				},
+				"getBlacklistReason(address)": {
+					"params": {
+						"_user": "Address to look up."
+					},
+					"returns": {
+						"_0": "The reason string (empty if never blacklisted or since whitelisted)."
+					}
+				},
+				"getBlacklistedAddresses()": {
+					"returns": {
+						"_0": "Array of addresses."
+					}
+				},
+				"getSuspiciousTransactions()": {
+					"details": "Two-pass approach: first counts matches to size the array      correctly, then fills it. Same on-chain-cost caveat as      getAllTransactionLogs applies here.",
+					"returns": {
+						"_0": "Array of suspicious TransactionLog entries, oldest first."
+					}
+				},
+				"getSystemStats()": {
+					"returns": {
+						"totalBlacklisted": "Total addresses ever blacklisted through this contract.",
+						"totalPayments": "Total payments ever processed (from PaymentProcessor).",
+						"totalRequests": "Total fund requests ever created (from FundRequest).",
+						"totalSuspicious": "Total suspicious entries in this contract's transaction log.",
+						"totalUsers": "Total registered users (from UserRegistry)."
+					}
+				},
+				"getThreshold()": {
+					"returns": {
+						"_0": "Current threshold amount, in wei."
+					}
+				},
+				"getTransactionLog(uint256)": {
+					"params": {
+						"_id": "ID of the log entry to look up."
+					},
+					"returns": {
+						"_0": "The TransactionLog struct for _id."
+					}
+				},
+				"isBlacklisted(address)": {
+					"params": {
+						"_user": "Address to check."
+					},
+					"returns": {
+						"_0": "True if blacklisted, false otherwise."
+					}
+				},
+				"setThreshold(uint256)": {
+					"params": {
+						"_newThreshold": "New threshold amount, in wei."
+					}
+				},
+				"transferAdmin(address)": {
+					"params": {
+						"_newAdmin": "Address of the new admin. Cannot be the zero address        or the current admin."
+					}
+				},
+				"whitelistAddress(address)": {
+					"params": {
+						"_user": "Address to whitelist."
+					}
+				}
+			},
+			"title": "AMLSystem",
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"AdminTransferred(address,address)": {
+					"notice": "Emitted when admin control is transferred to a new address."
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"admin()": {
+					"notice": "Address administering this contract."
+				},
+				"blacklist(address)": {
+					"notice": "This contract's own blacklist, independent of UserRegistry's."
+				},
+				"blacklistAddress(address,string)": {
+					"notice": "Blacklists an address in this contract's own registry, with         a recorded reason. Admin only. Admin cannot blacklist itself."
+				},
+				"blacklistReasons(address)": {
+					"notice": "Reason recorded for each blacklisted address."
+				},
+				"blacklistedAddresses(uint256)": {
+					"notice": "List of all addresses ever blacklisted through this contract."
+				},
+				"fundRequest()": {
+					"notice": "Reference to the deployed FundRequest contract."
+				},
+				"getAllTransactionLogs()": {
+					"notice": "Returns every transaction log entry recorded so far."
+				},
+				"getBlacklistCount()": {
+					"notice": "Returns the total number of addresses ever blacklisted         through this contract (including any since whitelisted)."
+				},
+				"getBlacklistReason(address)": {
+					"notice": "Returns the recorded reason for an address's blacklisting."
+				},
+				"getBlacklistedAddresses()": {
+					"notice": "Returns the full list of addresses ever blacklisted through         this contract."
+				},
+				"getSuspiciousTransactions()": {
+					"notice": "Returns only the transaction log entries flagged as suspicious."
+				},
+				"getSystemStats()": {
+					"notice": "Returns a snapshot of aggregate system statistics pulled from         across the whole AML system."
+				},
+				"getThreshold()": {
+					"notice": "Returns the current suspicious-amount threshold."
+				},
+				"getTransactionLog(uint256)": {
+					"notice": "Returns the full record for a given transaction log entry."
+				},
+				"isBlacklisted(address)": {
+					"notice": "Checks whether an address is blacklisted in this contract."
+				},
+				"paymentProcessor()": {
+					"notice": "Reference to the deployed PaymentProcessor contract."
+				},
+				"setThreshold(uint256)": {
+					"notice": "Updates the suspicious-amount threshold used when logging         transactions. Admin only."
+				},
+				"suspiciousThreshold()": {
+					"notice": "Amount above which a logged transaction is auto-flagged as         suspicious. Defaults to 5 ether."
+				},
+				"transactionLogCounter()": {
+					"notice": "Running counter used to assign unique transaction log IDs (1-indexed)."
+				},
+				"transactionLogs(uint256)": {
+					"notice": "Maps transaction log ID to its full record."
+				},
+				"transferAdmin(address)": {
+					"notice": "Transfers admin control of this contract to a new address."
+				},
+				"userRegistry()": {
+					"notice": "Reference to the deployed UserRegistry contract."
+				},
+				"whitelistAddress(address)": {
+					"notice": "Removes an address from this contract's blacklist. Admin only."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"AMLSystem.sol": "AMLSystem"
+		},
+		"evmVersion": "osaka",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"AMLSystem.sol": {
+			"keccak256": "0xfacd78d97d5017e9ed82503f21461bd11a71c71f99b352a1d14559dda0cd4aa0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://934288d028fd5f061441adc765c6b8577509e276b77f063cf8ca9cfae4288f13",
+				"dweb:/ipfs/QmbVd8VKfZfcA3FxpYB17cux8usDZRhC2igKdJ28rvYDEW"
+			]
+		},
+		"FundRequest.sol": {
+			"keccak256": "0x9d6a2b8f8cb0d3a4e9faf1094d69ae6436243bf0a7960cab90c1c3e74165ac1f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1cc77eb8201b1aa52fabf9ac1fde9d200518375ff4e32398d92e9405c90453ed",
+				"dweb:/ipfs/QmQpscpxRKPe4cYQeHd8ZWMFQHAa1h75KBeMa7LMzJ8F8R"
+			]
+		},
+		"PaymentProcessor.sol": {
+			"keccak256": "0x13295a41f646a1ad3453fff0bb929db483260c480f895d8c511ee204f8dbdff8",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4fce5b79d042f4fb81980ae6971b24556268e2c3cf5f605ffcda2db4e0f43d4e",
+				"dweb:/ipfs/QmdgTKhAui9cUzcPKesQr9nHDy7FvoTNMJcHQmXDV3f7jS"
+			]
+		},
+		"UserRegistry.sol": {
+			"keccak256": "0xfd0ef727c2e34adc5753b1ee20e047a37dc0311f623bdadbd78511871bad61c6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a4a8522d027696fa234dac0c83633505ba48c6879dcadbc6a0aeeef50fe50d9c",
+				"dweb:/ipfs/QmQHfarE7qygvr5jA4PLoRKKYijKYe5RcUrxsyZzgfNGc2"
+			]
+		}
+	},
+	"version": 1
+}

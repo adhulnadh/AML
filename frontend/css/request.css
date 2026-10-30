@@ -1,0 +1,537 @@
+/* ==========================================================================
+   REQUEST.CSS — page2-user-request.html
+   Two-column request dashboard for REQUESTER users. Depends on common.css
+   for design tokens (--color-*, --space-*, --radius-*, --shadow-*) and its
+   .navbar / .nav-wallet classes for the top bar.
+
+   Table of Contents:
+     1. Page wrapper & two-column layout
+     2. Create-request card (left column)
+     3. My-requests section (right column)
+     4. Request item card
+     5. Status badges
+     6. Urgency badges
+     7. Timeline history
+     8. Empty state
+     9. Responsive breakpoints
+   ========================================================================== */
+
+/* ==========================================================================
+   1. PAGE WRAPPER & TWO-COLUMN LAYOUT
+   ========================================================================== */
+
+.request-page {
+  min-height: 100vh;
+  background: var(--gradient-page);
+}
+
+.request-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  display: grid;
+  grid-template-columns: minmax(320px, 400px) 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.request-page-header {
+  grid-column: 1 / -1;
+  margin-bottom: var(--space-2);
+}
+
+.request-page-header h1 {
+  font-size: var(--fs-2xl);
+  margin-bottom: var(--space-1);
+}
+
+.request-page-header p {
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+}
+
+/* ==========================================================================
+   2. CREATE-REQUEST CARD (left column)
+   ========================================================================== */
+
+.create-request-card {
+  position: sticky;
+  top: calc(var(--space-8) + 72px); /* clears the sticky navbar */
+  background: var(--surface-card);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-6);
+}
+
+.create-request-card h2 {
+  font-size: var(--fs-lg);
+  margin-bottom: var(--space-5);
+}
+
+.create-request-card .amount-input-wrapper {
+  position: relative;
+}
+
+.create-request-card .amount-input-wrapper .form-input {
+  padding-right: var(--space-12);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+}
+
+.create-request-card .amount-unit {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  pointer-events: none;
+}
+
+.urgency-select {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.urgency-select-option {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-3) var(--space-2);
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: border-color var(--transition-fast), background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.urgency-select-option:hover {
+  border-color: var(--color-gray-300);
+  background: var(--color-gray-50);
+}
+
+.urgency-select-option.selected[data-urgency="low"] {
+  border-color: var(--color-success);
+  background: var(--color-success-50);
+  color: var(--color-success-dark);
+}
+
+.urgency-select-option.selected[data-urgency="medium"] {
+  border-color: var(--color-warning);
+  background: var(--color-warning-50);
+  color: var(--color-warning-dark);
+}
+
+.urgency-select-option.selected[data-urgency="high"] {
+  border-color: var(--color-danger);
+  background: var(--color-danger-50);
+  color: var(--color-danger-dark);
+}
+
+/* ==========================================================================
+   3. MY-REQUESTS SECTION (right column)
+   ========================================================================== */
+
+.my-requests-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.my-requests-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.my-requests-header h2 {
+  font-size: var(--fs-lg);
+  margin: 0;
+}
+
+.my-requests-filter {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.my-requests-filter button {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+  background: var(--color-gray-100);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.my-requests-filter button:hover {
+  background: var(--color-gray-200);
+}
+
+.my-requests-filter button.active {
+  background: var(--color-primary);
+  color: var(--text-on-brand);
+}
+
+.requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ==========================================================================
+   4. REQUEST ITEM CARD
+   ========================================================================== */
+
+.request-item {
+  background: var(--surface-card);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base), transform var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.request-item:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  border-color: var(--color-gray-300);
+}
+
+.request-item-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.request-item-amount {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-extrabold);
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.request-item-amount .unit {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--text-muted);
+  margin-left: var(--space-1);
+}
+
+.request-item-badges {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.request-item-purpose {
+  font-size: var(--fs-base);
+  color: var(--text-primary);
+  font-weight: var(--fw-medium);
+  margin-bottom: var(--space-1);
+}
+
+.request-item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.request-item-meta .meta-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-gray-300);
+}
+
+.request-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-gray-100);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.request-item-footer .funder-tag {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+}
+
+.request-item.is-suspicious {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: linear-gradient(180deg, var(--color-warning-50) 0%, var(--surface-card) 60px);
+}
+
+/* ==========================================================================
+   5. STATUS BADGES
+   ========================================================================== */
+
+.request-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.request-status-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.request-status-badge.status-pending {
+  background: var(--color-warning-50);
+  color: var(--color-warning-dark);
+}
+
+.request-status-badge.status-approved {
+  background: var(--color-primary-50);
+  color: var(--color-primary-dark);
+}
+
+.request-status-badge.status-rejected {
+  background: var(--color-danger-50);
+  color: var(--color-danger-dark);
+}
+
+.request-status-badge.status-completed {
+  background: var(--color-success-50);
+  color: var(--color-success-dark);
+}
+
+.request-status-badge.status-cancelled {
+  background: var(--color-gray-100);
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   6. URGENCY BADGES
+   ========================================================================== */
+
+.urgency-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.urgency-badge.urgency-low {
+  background: var(--color-success-50);
+  color: var(--color-success-dark);
+}
+
+.urgency-badge.urgency-medium {
+  background: var(--color-warning-50);
+  color: var(--color-warning-dark);
+}
+
+.urgency-badge.urgency-high {
+  background: var(--color-danger-50);
+  color: var(--color-danger-dark);
+}
+
+/* ==========================================================================
+   7. TIMELINE HISTORY
+   ========================================================================== */
+
+.request-timeline {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-gray-100);
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: var(--space-6);
+  padding-bottom: var(--space-4);
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-gray-300);
+  box-shadow: 0 0 0 3px var(--surface-card);
+}
+
+.timeline-item::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 14px;
+  bottom: -2px;
+  width: 1.5px;
+  background: var(--color-gray-200);
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-item:last-child::after {
+  display: none;
+}
+
+.timeline-item.is-complete::before {
+  background: var(--color-success);
+}
+
+.timeline-item.is-rejected::before {
+  background: var(--color-danger);
+}
+
+.timeline-item.is-current::before {
+  background: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-primary-100);
+}
+
+.timeline-label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--text-primary);
+}
+
+.timeline-timestamp {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   8. EMPTY STATE
+   ========================================================================== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-16) var(--space-6);
+  background: var(--surface-card);
+  border: 1.5px dashed var(--color-gray-200);
+  border-radius: var(--radius-lg);
+}
+
+.empty-state .empty-illustration {
+  width: 96px;
+  height: 96px;
+  margin-bottom: var(--space-6);
+  border-radius: var(--radius-full);
+  background: var(--color-primary-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
+.empty-state h3 {
+  font-size: var(--fs-lg);
+  margin-bottom: var(--space-2);
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  max-width: 32ch;
+  margin-bottom: var(--space-6);
+}
+
+/* ==========================================================================
+   9. RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .request-container {
+    grid-template-columns: 320px 1fr;
+    gap: var(--space-6);
+  }
+}
+
+@media (max-width: 768px) {
+  .request-container {
+    grid-template-columns: 1fr;
+    padding: var(--space-6) var(--space-5);
+  }
+
+  .create-request-card {
+    position: static;
+  }
+
+  .my-requests-header {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .request-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 480px) {
+  .request-container {
+    padding: var(--space-4);
+    gap: var(--space-5);
+  }
+
+  .create-request-card,
+  .request-item {
+    padding: var(--space-4);
+  }
+
+  .request-item-amount {
+    font-size: var(--fs-xl);
+  }
+
+  .urgency-select {
+    flex-wrap: wrap;
+  }
+
+  .urgency-select-option {
+    flex: 1 1 30%;
+  }
+
+  .empty-state {
+    padding: var(--space-10) var(--space-4);
+  }
+
+  .empty-state .empty-illustration {
+    width: 72px;
+    height: 72px;
+    font-size: 2rem;
+  }
+}

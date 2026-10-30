@@ -1,0 +1,538 @@
+/* ==========================================================================
+   LOGIN.CSS — page1-login.html
+   Full-screen wallet-connect login. Depends on common.css being loaded
+   first for design tokens (--color-*, --space-*, --radius-*, --shadow-*).
+
+   Table of Contents:
+     1. Page wrapper & background
+     2. Login card
+     3. Logo
+     4. Connect button state
+     5. Wallet info card (post-connect)
+     6. Role selector
+     7. Continue button
+     8. Animations
+     9. Responsive breakpoints
+   ========================================================================== */
+
+/* ==========================================================================
+   1. PAGE WRAPPER & BACKGROUND
+   ========================================================================== */
+
+.login-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  position: relative;
+  overflow: hidden;
+
+  /* Subtle brand-tinted gradient, quieter than the button gradients so it
+     stays a backdrop rather than competing with the card. */
+  background:
+    radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.10) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+    var(--gradient-page);
+}
+
+/* Two soft, static gradient orbs for depth. No motion here — the page's
+   one animated moment is the card's entrance below, not ambient drift. */
+.login-container::before,
+.login-container::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  z-index: 0;
+}
+
+.login-container::before {
+  width: 420px;
+  height: 420px;
+  top: -120px;
+  left: -100px;
+  background: rgba(99, 102, 241, 0.12);
+}
+
+.login-container::after {
+  width: 360px;
+  height: 360px;
+  bottom: -140px;
+  right: -80px;
+  background: rgba(16, 185, 129, 0.10);
+}
+
+/* ==========================================================================
+   2. LOGIN CARD
+   ========================================================================== */
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface-card);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-10) var(--space-8);
+  animation: card-rise 480ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.login-card-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+  margin-top: calc(-1 * var(--space-2));
+  margin-bottom: var(--space-8);
+}
+
+/* ==========================================================================
+   3. LOGO
+   ========================================================================== */
+
+.login-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.login-logo .logo-mark {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-on-brand);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-extrabold);
+  box-shadow: var(--shadow-primary);
+}
+
+.login-logo .logo-title {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* ==========================================================================
+   4. CONNECT BUTTON STATE
+   ========================================================================== */
+
+.btn-connect-wallet {
+  width: 100%;
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  color: var(--text-on-brand);
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+}
+
+.btn-connect-wallet:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.45);
+}
+
+.btn-connect-wallet:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-connect-wallet:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-connect-wallet .wallet-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-6) 0;
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-gray-200);
+}
+
+.login-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-danger-50);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-md);
+  color: var(--color-danger-dark);
+  font-size: var(--fs-sm);
+  animation: shake-in 320ms ease;
+}
+
+/* ==========================================================================
+   5. WALLET INFO CARD (post-connect)
+   ========================================================================== */
+
+.wallet-info-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--color-primary-50);
+  border: 1px solid var(--color-primary-100);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-8);
+  animation: fade-in-up 380ms ease forwards;
+}
+
+.wallet-info-card .wallet-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-on-brand);
+  font-weight: var(--fw-bold);
+}
+
+.wallet-info-card .wallet-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.wallet-info-card .wallet-address {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wallet-info-card .wallet-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--color-success-dark);
+}
+
+.wallet-info-card .wallet-status .status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-success);
+  box-shadow: 0 0 0 3px var(--color-success-50);
+}
+
+.wallet-info-card .wallet-disconnect {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.wallet-info-card .wallet-disconnect:hover {
+  color: var(--color-danger);
+  background: var(--color-danger-50);
+}
+
+/* ==========================================================================
+   6. ROLE SELECTOR
+   ========================================================================== */
+
+.role-selector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+  animation: fade-in-up 380ms ease 80ms forwards;
+  opacity: 0;
+}
+
+.role-selector-label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.role-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  position: relative;
+  transition: border-color var(--transition-fast), background var(--transition-fast),
+    transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.role-option:hover {
+  border-color: var(--color-primary-light);
+  background: var(--color-primary-50);
+}
+
+.role-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.role-option .role-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-lg);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.role-option .role-text {
+  flex: 1;
+}
+
+.role-option .role-name {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+}
+
+.role-option .role-desc {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.role-option .role-check {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--color-gray-300);
+  border-radius: 50%;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+/* Selected state */
+.role-option.selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-50);
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.role-option.selected .role-icon {
+  background: var(--gradient-primary);
+  color: var(--text-on-brand);
+}
+
+.role-option.selected .role-check {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  box-shadow: inset 0 0 0 3px var(--surface-card);
+}
+
+/* ==========================================================================
+   7. CONTINUE BUTTON
+   ========================================================================== */
+
+.btn-continue {
+  width: 100%;
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  color: var(--text-on-brand);
+  background: var(--gradient-success);
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-success);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+    opacity var(--transition-fast);
+  animation: fade-in-up 380ms ease 140ms forwards;
+  opacity: 0;
+}
+
+.btn-continue:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.4);
+}
+
+.btn-continue:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  background: var(--color-gray-300);
+  box-shadow: none;
+}
+
+.login-footer-note {
+  text-align: center;
+  margin-top: var(--space-6);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   8. ANIMATIONS
+   ========================================================================== */
+
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake-in {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  30% {
+    transform: translateX(-4px);
+  }
+  60% {
+    transform: translateX(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-card,
+  .wallet-info-card,
+  .role-selector,
+  .btn-continue,
+  .login-error {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   9. RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .login-card {
+    padding: var(--space-8) var(--space-6);
+  }
+
+  .login-logo .logo-mark {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: var(--space-4);
+  }
+
+  .login-card {
+    padding: var(--space-6) var(--space-5);
+    border-radius: var(--radius-lg);
+  }
+
+  .login-logo {
+    margin-bottom: var(--space-6);
+  }
+
+  .login-logo .logo-mark {
+    width: 48px;
+    height: 48px;
+    font-size: var(--fs-md);
+  }
+
+  .login-logo .logo-title {
+    font-size: var(--fs-lg);
+  }
+
+  .role-option {
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .role-option .role-icon {
+    width: 36px;
+    height: 36px;
+    font-size: var(--fs-base);
+  }
+
+  .wallet-info-card {
+    flex-wrap: wrap;
+  }
+
+  .wallet-info-card .wallet-disconnect {
+    margin-left: auto;
+  }
+}

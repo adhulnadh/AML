@@ -1,0 +1,730 @@
+{
+	"compiler": {
+		"version": "0.8.34+commit.80d5c536"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userRegistryAddress",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "paymentProcessor",
+						"type": "address"
+					}
+				],
+				"name": "PaymentProcessorSet",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "funder",
+						"type": "address"
+					}
+				],
+				"name": "RequestApproved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "RequestCancelled",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "RequestCompleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "requester",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "purpose",
+						"type": "string"
+					}
+				],
+				"name": "RequestCreated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "funder",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "reason",
+						"type": "string"
+					}
+				],
+				"name": "RequestRejected",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "SuspiciousRequestFlagged",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "SUSPICIOUS_AMOUNT_THRESHOLD",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_requestId",
+						"type": "uint256"
+					}
+				],
+				"name": "cancelRequest",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_purpose",
+						"type": "string"
+					},
+					{
+						"internalType": "enum FundRequest.Urgency",
+						"name": "_urgency",
+						"type": "uint8"
+					}
+				],
+				"name": "createRequest",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "requestId",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getPendingRequests",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_requestId",
+						"type": "uint256"
+					}
+				],
+				"name": "getRequest",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "requester",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "funder",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "purpose",
+								"type": "string"
+							},
+							{
+								"internalType": "enum FundRequest.Urgency",
+								"name": "urgency",
+								"type": "uint8"
+							},
+							{
+								"internalType": "enum FundRequest.RequestStatus",
+								"name": "status",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "createdAt",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "processedAt",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "rejectionReason",
+								"type": "string"
+							},
+							{
+								"internalType": "bool",
+								"name": "isSuspicious",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct FundRequest.FundRequestData",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getRequestsByUser",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getRequestsCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paymentProcessor",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "pendingRequestIds",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "requestCounter",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "requests",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "requester",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "funder",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "purpose",
+						"type": "string"
+					},
+					{
+						"internalType": "enum FundRequest.Urgency",
+						"name": "urgency",
+						"type": "uint8"
+					},
+					{
+						"internalType": "enum FundRequest.RequestStatus",
+						"name": "status",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "createdAt",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "processedAt",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "rejectionReason",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isSuspicious",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_paymentProcessor",
+						"type": "address"
+					}
+				],
+				"name": "setPaymentProcessor",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_requestId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_funder",
+						"type": "address"
+					}
+				],
+				"name": "updateRequestAsApproved",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_requestId",
+						"type": "uint256"
+					}
+				],
+				"name": "updateRequestAsCompleted",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_requestId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_funder",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_reason",
+						"type": "string"
+					}
+				],
+				"name": "updateRequestAsRejected",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "userRegistry",
+				"outputs": [
+					{
+						"internalType": "contract UserRegistry",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "userRequests",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Handles the lifecycle of money requests created by users holding the      REQUESTER role in UserRegistry, from creation through approval,      rejection, completion, or cancellation. NOTE: This contract only manages request *state*. Actual value transfer is handled by a companion PaymentProcessor contract, which is linked via setPaymentProcessor() and is the only address authorized to call updateRequestAsApproved / updateRequestAsCompleted / updateRequestAsRejected.",
+			"kind": "dev",
+			"methods": {
+				"cancelRequest(uint256)": {
+					"params": {
+						"_requestId": "ID of the request to cancel."
+					}
+				},
+				"constructor": {
+					"details": "Links this contract to a deployed UserRegistry instance.",
+					"params": {
+						"_userRegistryAddress": "Address of the deployed UserRegistry contract."
+					}
+				},
+				"createRequest(uint256,string,uint8)": {
+					"params": {
+						"_amount": "Requested amount, in wei. Must be greater than zero.",
+						"_purpose": "Human-readable reason for the request. Must not be empty.",
+						"_urgency": "Requester-declared urgency level."
+					},
+					"returns": {
+						"requestId": "The ID assigned to the newly created request."
+					}
+				},
+				"getPendingRequests()": {
+					"returns": {
+						"_0": "Array of pending request IDs."
+					}
+				},
+				"getRequest(uint256)": {
+					"params": {
+						"_requestId": "ID of the request to look up."
+					},
+					"returns": {
+						"_0": "The FundRequestData struct for _requestId."
+					}
+				},
+				"getRequestsByUser(address)": {
+					"params": {
+						"_user": "Address to look up."
+					},
+					"returns": {
+						"_0": "Array of request IDs belonging to _user."
+					}
+				},
+				"getRequestsCount()": {
+					"returns": {
+						"_0": "Total request count."
+					}
+				},
+				"setPaymentProcessor(address)": {
+					"params": {
+						"_paymentProcessor": "Address of the deployed PaymentProcessor contract."
+					}
+				},
+				"updateRequestAsApproved(uint256,address)": {
+					"params": {
+						"_funder": "Address of the user approving/funding the request.",
+						"_requestId": "ID of the request being approved."
+					}
+				},
+				"updateRequestAsCompleted(uint256)": {
+					"params": {
+						"_requestId": "ID of the request being completed."
+					}
+				},
+				"updateRequestAsRejected(uint256,address,string)": {
+					"params": {
+						"_funder": "Address of the user rejecting the request.",
+						"_reason": "Human-readable rejection reason.",
+						"_requestId": "ID of the request being rejected."
+					}
+				}
+			},
+			"stateVariables": {
+				"SUSPICIOUS_AMOUNT_THRESHOLD": {
+					"details": "Simple on-chain heuristic threshold used to auto-flag unusually      large requests as suspicious. This is a placeholder signal only —      a real AML system would rely on off-chain risk scoring rather      than a single static amount threshold."
+				}
+			},
+			"title": "FundRequest",
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"PaymentProcessorSet(address)": {
+					"notice": "Emitted when the admin links the PaymentProcessor contract."
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"cancelRequest(uint256)": {
+					"notice": "Cancels a pending request. Only the original requester may         cancel, and only while the request is still PENDING."
+				},
+				"createRequest(uint256,string,uint8)": {
+					"notice": "Creates a new fund request on behalf of the caller."
+				},
+				"getPendingRequests()": {
+					"notice": "Returns all request IDs currently in PENDING status."
+				},
+				"getRequest(uint256)": {
+					"notice": "Returns the full record for a given request."
+				},
+				"getRequestsByUser(address)": {
+					"notice": "Returns all request IDs created by a given user."
+				},
+				"getRequestsCount()": {
+					"notice": "Returns the total number of requests ever created."
+				},
+				"paymentProcessor()": {
+					"notice": "Address of the deployed PaymentProcessor contract, the only         caller authorized to transition a request through         APPROVED/REJECTED/COMPLETED. Set once by admin after deployment."
+				},
+				"pendingRequestIds(uint256)": {
+					"notice": "List of request IDs currently in PENDING status."
+				},
+				"requestCounter()": {
+					"notice": "Running counter used to assign unique request IDs (1-indexed)."
+				},
+				"requests(uint256)": {
+					"notice": "Maps request ID to its full record."
+				},
+				"setPaymentProcessor(address)": {
+					"notice": "Links the deployed PaymentProcessor contract so it can call         updateRequestAsApproved / Completed / Rejected. Admin only         (delegated to UserRegistry's admin), intended to be called         once during system setup."
+				},
+				"updateRequestAsApproved(uint256,address)": {
+					"notice": "Marks a request as APPROVED and assigns the funder. Callable         only by the linked PaymentProcessor contract."
+				},
+				"updateRequestAsCompleted(uint256)": {
+					"notice": "Marks an approved request as COMPLETED once payment has been         transferred. Callable only by the linked PaymentProcessor         contract."
+				},
+				"updateRequestAsRejected(uint256,address,string)": {
+					"notice": "Marks a pending request as REJECTED with a reason. Callable         only by the linked PaymentProcessor contract."
+				},
+				"userRegistry()": {
+					"notice": "Reference to the deployed UserRegistry contract."
+				},
+				"userRequests(address,uint256)": {
+					"notice": "Maps a user address to the list of request IDs they created."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"FundRequest.sol": "FundRequest"
+		},
+		"evmVersion": "osaka",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"FundRequest.sol": {
+			"keccak256": "0x9d6a2b8f8cb0d3a4e9faf1094d69ae6436243bf0a7960cab90c1c3e74165ac1f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1cc77eb8201b1aa52fabf9ac1fde9d200518375ff4e32398d92e9405c90453ed",
+				"dweb:/ipfs/QmQpscpxRKPe4cYQeHd8ZWMFQHAa1h75KBeMa7LMzJ8F8R"
+			]
+		},
+		"UserRegistry.sol": {
+			"keccak256": "0xfd0ef727c2e34adc5753b1ee20e047a37dc0311f623bdadbd78511871bad61c6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a4a8522d027696fa234dac0c83633505ba48c6879dcadbc6a0aeeef50fe50d9c",
+				"dweb:/ipfs/QmQHfarE7qygvr5jA4PLoRKKYijKYe5RcUrxsyZzgfNGc2"
+			]
+		}
+	},
+	"version": 1
+}

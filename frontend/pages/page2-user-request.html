@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Submit and track your fund requests on AML Shield." />
+  <title>My Requests | AML Shield</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- common.css MUST load before request.css -->
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/request.css" />
+</head>
+<body class="request-page">
+
+  <!-- ===================================================================
+       NAVBAR (common.css's .navbar/.nav-brand/.nav-links/.nav-wallet)
+  ==================================================================== -->
+  <nav class="navbar">
+    <a href="page2-user-request.html" class="nav-brand">
+      <span class="brand-mark"><i class="fa-solid fa-shield-halved"></i></span>
+      AML Shield
+    </a>
+    <div class="nav-links">
+      <a href="page2-user-request.html" class="active">Dashboard</a>
+      <a href="page2-user-request.html">My Requests</a>
+      <a href="#" id="logoutLink">Logout</a>
+    </div>
+    <div class="nav-wallet" id="navWallet">
+      <span class="wallet-dot"></span>
+      <span id="navWalletAddress">Not connected</span>
+    </div>
+  </nav>
+
+  <!-- ===================================================================
+       MAIN CONTENT
+       Uses request.css's actual grid class (.request-container) rather
+       than the ".two-column-layout" name from the spec -- request.css
+       (built earlier) already implements this two-column grid under that
+       name, so this reuses it instead of introducing a duplicate class
+       that would need its own CSS rules.
+  ==================================================================== -->
+  <div class="request-container">
+
+    <div class="request-page-header">
+      <h1>Request Money</h1>
+      <p id="userNameDisplay">Welcome back</p>
+    </div>
+
+    <!-- Stats row: common.css's .grid-4 / .stat-card, IDs matched exactly
+         to page2-request.js's el.stat* references. -->
+    <div class="grid-4 mb-6" style="grid-column: 1 / -1;">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotalRequests">0</div>
+        <div class="stat-label">Total Requests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statPending">0</div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statApproved">0</div>
+        <div class="stat-label">Approved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statTotalReceived">0 ETH</div>
+        <div class="stat-label">Total Received</div>
+      </div>
+    </div>
+
+    <!-- LEFT COLUMN: create-request-card -->
+    <div class="create-request-card">
+      <h2>New Request</h2>
+      <form id="createRequestForm">
+        <div class="form-group">
+          <label class="form-label" for="amountInput">Amount</label>
+          <div class="amount-input-wrapper">
+            <input id="amountInput" class="form-input" type="number" min="0" step="0.0001" placeholder="0.00" required />
+            <span class="amount-unit">ETH</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="purposeInput">Purpose</label>
+          <textarea id="purposeInput" class="form-textarea" placeholder="Briefly describe what this request is for..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Urgency</label>
+          <div class="urgency-select" id="urgencySelect">
+            <div class="urgency-select-option" data-urgency="0">Low</div>
+            <div class="urgency-select-option selected" data-urgency="1">Medium</div>
+            <div class="urgency-select-option" data-urgency="2">High</div>
+          </div>
+        </div>
+
+        <!-- Info box: AML threshold warning -->
+        <div class="login-error" style="background: var(--color-warning-50); border-color: rgba(245,158,11,0.3); color: var(--color-warning-dark); margin-bottom: var(--space-5);">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Requests above the system's AML threshold are automatically flagged for admin review. This does not block your request, but may delay approval.</span>
+        </div>
+
+        <button type="submit" id="createRequestBtn" class="btn btn-primary btn-block">
+          <i class="fa-solid fa-paper-plane"></i>
+          Submit Request
+        </button>
+      </form>
+    </div>
+
+    <!-- RIGHT COLUMN: my-requests-section -->
+    <div class="my-requests-section">
+      <div class="my-requests-header">
+        <h2>My Requests</h2>
+        <div class="my-requests-filter" id="requestsFilter">
+          <button data-filter="all" class="active">All</button>
+          <button data-filter="0">Pending</button>
+          <button data-filter="1">Approved</button>
+          <button data-filter="2">Rejected</button>
+        </div>
+      </div>
+
+      <div class="requests-list" id="requestsList"></div>
+
+      <div class="empty-state hidden" id="emptyState">
+        <div class="empty-illustration"><i class="fa-solid fa-inbox"></i></div>
+        <h3>No requests yet</h3>
+        <p>Create your first fund request using the form on the left.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast-container"></div>
+  <div id="loading"></div>
+
+  <!-- Scripts -- order matters (see page1-login.html for the full note) -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="../js/deployed.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/metamask.js"></script>
+  <script src="../js/page2-request.js"></script>
+
+  <script>
+    // Minimal navbar wiring not covered by page2-request.js: populate the
+    // wallet badge and wire logout. Kept inline and small rather than
+    // adding a new shared file for two lines of behavior.
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = window.Wallet && window.Wallet.getStoredUser();
+      const addrEl = document.getElementById("navWalletAddress");
+      if (user && addrEl) {
+        addrEl.textContent = window.Wallet.formatAddress(user.address);
+      }
+
+      const logoutLink = document.getElementById("logoutLink");
+      if (logoutLink) {
+        logoutLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.Wallet.disconnect();
+          window.location.href = window.CONFIG.ROUTES.login;
+        });
+      }
+    });
+  </script>
+</body>
+</html>

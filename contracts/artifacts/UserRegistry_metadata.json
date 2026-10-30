@@ -1,0 +1,656 @@
+{
+	"compiler": {
+		"version": "0.8.34+commit.80d5c536"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "contractType",
+						"type": "string"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "contractAddress",
+						"type": "address"
+					}
+				],
+				"name": "AuthorizedContractSet",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "UserBlacklisted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum UserRegistry.UserRole",
+						"name": "role",
+						"type": "uint8"
+					}
+				],
+				"name": "UserRegistered",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					}
+				],
+				"name": "UserUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "UserWhitelisted",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "blacklistUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fundRequestContract",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getTotalUsers",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getUserInfo",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "enum UserRegistry.UserRole",
+								"name": "role",
+								"type": "uint8"
+							},
+							{
+								"internalType": "address",
+								"name": "walletAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "annualIncome",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "isRegistered",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "isBlacklisted",
+								"type": "bool"
+							},
+							{
+								"internalType": "uint256",
+								"name": "registrationDate",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "totalRequests",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "totalPayments",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct UserRegistry.User",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getUserRole",
+				"outputs": [
+					{
+						"internalType": "enum UserRegistry.UserRole",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "incrementUserPayments",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "incrementUserRequests",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "isUserRegistered",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paymentProcessorContract",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "enum UserRegistry.UserRole",
+						"name": "_role",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_annualIncome",
+						"type": "uint256"
+					}
+				],
+				"name": "registerUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "registeredAddresses",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_fundRequestContract",
+						"type": "address"
+					}
+				],
+				"name": "setFundRequestContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_paymentProcessorContract",
+						"type": "address"
+					}
+				],
+				"name": "setPaymentProcessorContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalUsers",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_annualIncome",
+						"type": "uint256"
+					}
+				],
+				"name": "updateUserProfile",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "users",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "enum UserRegistry.UserRole",
+						"name": "role",
+						"type": "uint8"
+					},
+					{
+						"internalType": "address",
+						"name": "walletAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "annualIncome",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isRegistered",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isBlacklisted",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "registrationDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalRequests",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalPayments",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "whitelistUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Manages user registration, roles, and blacklist status for an      Anti-Money Laundering (AML) demo system. Roles:  - REQUESTER: a user who can request funds  - FUNDER:    a user who can approve/send funds  - ADMIN:     privileged role able to blacklist/whitelist users NOTE: This contract is intended as an educational / prototype building block. A production AML system would additionally need off-chain risk scoring, KYC integration, and should never gate compliance decisions on income level alone.",
+			"kind": "dev",
+			"methods": {
+				"blacklistUser(address)": {
+					"params": {
+						"_user": "Address to blacklist."
+					}
+				},
+				"constructor": {
+					"details": "Sets the deploying address as the contract admin."
+				},
+				"getTotalUsers()": {
+					"returns": {
+						"_0": "Total user count."
+					}
+				},
+				"getUserInfo(address)": {
+					"params": {
+						"_user": "Address to look up."
+					},
+					"returns": {
+						"_0": "The User struct associated with _user."
+					}
+				},
+				"getUserRole(address)": {
+					"params": {
+						"_user": "Address to check."
+					},
+					"returns": {
+						"_0": "The UserRole of _user (UserRole.NONE if never registered)."
+					}
+				},
+				"incrementUserPayments(address)": {
+					"params": {
+						"_user": "Address whose payment count should be incremented."
+					}
+				},
+				"incrementUserRequests(address)": {
+					"params": {
+						"_user": "Address whose request count should be incremented."
+					}
+				},
+				"isUserRegistered(address)": {
+					"params": {
+						"_user": "Address to check."
+					},
+					"returns": {
+						"_0": "True if the address has registered, false otherwise."
+					}
+				},
+				"registerUser(string,uint8,uint256)": {
+					"params": {
+						"_annualIncome": "Stated annual income, in wei.",
+						"_name": "Display name of the user. Must not be empty.",
+						"_role": "Role to assign. Must not be UserRole.NONE."
+					}
+				},
+				"setFundRequestContract(address)": {
+					"params": {
+						"_fundRequestContract": "Address of the deployed FundRequest contract."
+					}
+				},
+				"setPaymentProcessorContract(address)": {
+					"params": {
+						"_paymentProcessorContract": "Address of the deployed PaymentProcessor contract."
+					}
+				},
+				"updateUserProfile(string,uint256)": {
+					"params": {
+						"_annualIncome": "New stated annual income, in wei.",
+						"_name": "New display name. Must not be empty."
+					}
+				},
+				"whitelistUser(address)": {
+					"params": {
+						"_user": "Address to whitelist."
+					}
+				}
+			},
+			"title": "UserRegistry",
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"AuthorizedContractSet(string,address)": {
+					"notice": "Emitted when the admin links a companion contract."
+				},
+				"UserBlacklisted(address)": {
+					"notice": "Emitted when the admin blacklists a user."
+				},
+				"UserRegistered(address,string,uint8)": {
+					"notice": "Emitted when a new user successfully registers."
+				},
+				"UserUpdated(address,string)": {
+					"notice": "Emitted when an existing user updates their profile."
+				},
+				"UserWhitelisted(address)": {
+					"notice": "Emitted when the admin removes a user from the blacklist."
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"admin()": {
+					"notice": "Address that deployed the contract and administers the registry."
+				},
+				"blacklistUser(address)": {
+					"notice": "Blacklists a registered user, blocking their further         participation in the system. Admin only."
+				},
+				"fundRequestContract()": {
+					"notice": "Address of the deployed FundRequest contract, authorized to         increment request counters. Set once by admin after deployment."
+				},
+				"getTotalUsers()": {
+					"notice": "Returns the total number of registered users."
+				},
+				"getUserInfo(address)": {
+					"notice": "Returns the full profile of a given user."
+				},
+				"getUserRole(address)": {
+					"notice": "Returns the role assigned to a user."
+				},
+				"incrementUserPayments(address)": {
+					"notice": "Increments a user's total payments counter. Callable only by         the linked PaymentProcessor contract."
+				},
+				"incrementUserRequests(address)": {
+					"notice": "Increments a user's total fund-request counter. Callable only         by the linked FundRequest contract."
+				},
+				"isUserRegistered(address)": {
+					"notice": "Checks whether an address is registered."
+				},
+				"paymentProcessorContract()": {
+					"notice": "Address of the deployed PaymentProcessor contract, authorized         to increment payment counters. Set once by admin after deployment."
+				},
+				"registerUser(string,uint8,uint256)": {
+					"notice": "Registers the caller as a new user in the system."
+				},
+				"registeredAddresses(address)": {
+					"notice": "Quick lookup of whether an address has ever registered."
+				},
+				"setFundRequestContract(address)": {
+					"notice": "Links the deployed FundRequest contract so it can call         incrementUserRequests. Admin only, intended to be called once         during system setup."
+				},
+				"setPaymentProcessorContract(address)": {
+					"notice": "Links the deployed PaymentProcessor contract so it can call         incrementUserPayments. Admin only, intended to be called once         during system setup."
+				},
+				"totalUsers()": {
+					"notice": "Running count of all registered users."
+				},
+				"updateUserProfile(string,uint256)": {
+					"notice": "Allows an already-registered, non-blacklisted user to update         their own name and stated annual income."
+				},
+				"users(address)": {
+					"notice": "Maps a wallet address to its full User profile."
+				},
+				"whitelistUser(address)": {
+					"notice": "Removes a user from the blacklist, restoring their ability         to participate in the system. Admin only."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"UserRegistry.sol": "UserRegistry"
+		},
+		"evmVersion": "osaka",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"UserRegistry.sol": {
+			"keccak256": "0xfd0ef727c2e34adc5753b1ee20e047a37dc0311f623bdadbd78511871bad61c6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a4a8522d027696fa234dac0c83633505ba48c6879dcadbc6a0aeeef50fe50d9c",
+				"dweb:/ipfs/QmQHfarE7qygvr5jA4PLoRKKYijKYe5RcUrxsyZzgfNGc2"
+			]
+		}
+	},
+	"version": 1
+}
